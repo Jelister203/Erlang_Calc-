@@ -7,16 +7,11 @@
 #include <QDoubleSpinBox>
 #include <QSpinBox>
 #include <QPushButton>
-#include <QLabel>
 #include <QTextEdit>
 #include <QGroupBox>
 #include <QRadioButton>
-
-/*
- * mainwindow.h
- * Главное окно Qt5-калькулятора.
- * Вся логика отображения — здесь. Математика — только в calc_core.
- */
+#include <QSlider>
+#include <QLabel>
 
 class MainWindow : public QMainWindow
 {
@@ -31,64 +26,86 @@ private slots:
     void onTaskTypeChanged();
     void onCalculate();
     void onClear();
+    void onFontSizeChanged(int value);
+    void onLanguageChanged(int index);
+    void onNotationChanged(int index);
 
 private:
-    /* Верхняя панель выбора */
-    QComboBox      *modelCombo;
-    QRadioButton   *rbDirect;
-    QRadioButton   *rbInverseV;
-    QRadioButton   *rbInverseA;
+    QComboBox *langCombo;
+    QComboBox *notationCombo;
 
-    /* Контейнер страниц параметров */
+    QComboBox    *modelCombo;
+    QRadioButton *rbDirect;
+    QRadioButton *rbInverseV;
+    QRadioButton *rbInverseA;
+
     QStackedWidget *pagesStack;
 
-    /* --- Страница 0: Эрланга-Б --- */
+    /* Страница 0: Эрланга-Б */
     QGroupBox      *pageErlang;
+    QLabel         *lblV_erl,  *lblA_erl,  *lblBn_erl;
     QSpinBox       *spV_erl;
     QDoubleSpinBox *spA_erl;
     QDoubleSpinBox *spBnorm_erl;
 
-    /* --- Страница 1: Энгсет --- */
+    /* Страница 1: Энгсет */
     QGroupBox      *pageEngset;
+    QLabel         *lblV_eng, *lblN_eng, *lblA0_eng, *lblBn_eng;
     QSpinBox       *spV_eng;
     QSpinBox       *spN_eng;
     QDoubleSpinBox *spA0_eng;
     QDoubleSpinBox *spBnorm_eng;
 
-    /* --- Страница 2: Эрланга-А (Erlang-C) --- */
+    /* Страница 2: Эрланга-А */
     QGroupBox      *pageErlangC;
+    QLabel         *lblV_erlc, *lblA_erlc, *lblCn_erlc;
     QSpinBox       *spV_erlc;
     QDoubleSpinBox *spA_erlc;
     QDoubleSpinBox *spCnorm_erlc;
 
-    /* --- Страница 3: Резервирование --- */
+    /* Страница 3: Резервирование */
     QGroupBox      *pageReserv;
+    QLabel         *lblV_res, *lblC_res, *lblA_res, *lblBn_res;
     QSpinBox       *spV_res;
     QSpinBox       *spC_res;
     QDoubleSpinBox *spA_res;
     QDoubleSpinBox *spBnorm_res;
 
-    /* --- Страница 4: Групповое поступление --- */
+    /* Страница 4: Групповое поступление */
     QGroupBox      *pageBatch;
+    QLabel         *lblV_bat, *lblG_bat, *lblA_bat, *lblBn_bat;
     QSpinBox       *spV_bat;
     QSpinBox       *spG_bat;
     QDoubleSpinBox *spA_bat;
     QDoubleSpinBox *spBnorm_bat;
 
-    /* Кнопки и вывод */
-    QPushButton    *btnCalc;
-    QPushButton    *btnClear;
-    QTextEdit      *resultBox;
+    QPushButton *btnCalc;
+    QPushButton *btnClear;
+    QSlider     *fontSlider;
+    QLabel      *fontLabel;
+    QLabel      *lblFontCaption;
+    QLabel      *lblLang;
+    QLabel      *lblNotation;
 
-    /* Строители страниц */
+    QGroupBox *gbModel;
+    QGroupBox *gbTask;
+    QGroupBox *gbResult;
+    QGroupBox *gbControls;
+
+    QTextEdit *resultBox;
+    int        calcCounter;
+
     QGroupBox *buildErlangPage();
     QGroupBox *buildEngsetPage();
     QGroupBox *buildErlangCPage();
     QGroupBox *buildReservPage();
     QGroupBox *buildBatchPage();
 
+    void retranslate();
     void updateFieldVisibility();
+    void updateInverseALabel();
 
+    void appendResult(const QString &text);
     void calcErlang();
     void calcEngset();
     void calcErlangC();

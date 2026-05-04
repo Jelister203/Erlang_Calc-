@@ -21,19 +21,35 @@ target_include_directories(teletraffic_core PUBLIC
 )
 
 # ------------------------------------------------------------------
-# Таргет 2: Qt5-приложение (только UI, линкуется к библиотеке)
+# Таргет 2: Qt5-приложение (UI + локализация, линкуется к библиотеке)
 # ------------------------------------------------------------------
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Widgets Core)
 
 add_executable(teletraffic_calc WIN32
     main.cpp
     mainwindow.cpp
     mainwindow.h
+    app_locale.cpp
+    app_locale.h
 )
 
 target_link_libraries(teletraffic_calc PRIVATE
     teletraffic_core
     Qt5::Widgets
+    Qt5::Core
+)
+
+# ------------------------------------------------------------------
+# Копировать JSON-файлы локализации рядом с .exe после сборки
+# ------------------------------------------------------------------
+add_custom_command(TARGET teletraffic_calc POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/locale_ru.json"
+        "$<TARGET_FILE_DIR:teletraffic_calc>/locale_ru.json"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/locale_en.json"
+        "$<TARGET_FILE_DIR:teletraffic_calc>/locale_en.json"
+    COMMENT "Copying locale files..."
 )
 
 # Для Windows: после сборки выполните в папке сборки:
